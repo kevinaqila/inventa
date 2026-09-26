@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <!-- Projector Body with vibrant teal for Dark Mode -->
+  <rect x="60" y="130" width="280" height="140" rx="16" fill="#0d9488" />
+  
+  <!-- Projector Lens Outer -->
+  <circle cx="270" cy="200" r="50" fill="#115e59" />
+  <!-- Projector Lens Inner -->
+  <circle cx="270" cy="200" r="35" fill="#f0fdfa" />
+  <circle cx="270" cy="200" r="20" fill="#38bdf8" />
+  
+  <!-- Light Beam / Rays -->
+  <path d="M 330 180 L 390 130 L 390 270 L 330 220 Z" fill="#ccfbf1" opacity="0.95" />
+  
+  <!-- Ventilation / Detail Lines -->
+  <rect x="90" y="160" width="100" height="8" rx="4" fill="#0f766e" />
+  <rect x="90" y="185" width="100" height="8" rx="4" fill="#0f766e" />
+  <rect x="90" y="210" width="70" height="8" rx="4" fill="#0f766e" />
+  <rect x="90" y="235" width="70" height="8" rx="4" fill="#0f766e" />
+  
+  <!-- Projector Feet -->
+  <rect x="90" y="270" width="16" height="8" rx="2" fill="#5eead4" />
+  <rect x="250" y="270" width="16" height="8" rx="2" fill="#5eead4" />
+</svg>
