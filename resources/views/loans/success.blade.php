@@ -105,7 +105,7 @@
                         <span class="receipt-label">Barang Dipinjam</span>
                         <span class="text-[11px] text-teal-700 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-md font-semibold whitespace-nowrap">Dalam Antrean</span>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div class="space-y-2">
                         @foreach ($loan->items as $item)
                             <div class="flex items-center justify-between gap-3">
                                 <div class="min-w-0 flex-1">
