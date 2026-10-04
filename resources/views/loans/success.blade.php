@@ -8,9 +8,58 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        .btn-primary {
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            background-color: #0d9488;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.875rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(13, 148, 136, 0.2), 0 2px 4px -2px rgba(13, 148, 136, 0.2);
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-align: center;
+        }
+        .btn-primary:hover {
+            background-color: #0f766e;
+        }
+        .btn-primary:active {
+            transform: scale(0.99);
+        }
+
+        .receipt-label {
+            display: block;
+            font-size: 0.75rem;
+            margin-bottom: 0.125rem;
+            font-weight: 500;
+            color: #94a3b8;
+        }
+
+        .receipt-value {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #0f172a;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col justify-between antialiased">
@@ -28,77 +77,76 @@
     </header>
 
     <main class="max-w-3xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-12 flex-1 flex flex-col items-center justify-center">
-        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-10 w-full">
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-4 sm:p-10 w-full">
             <div class="text-center">
-                <div class="w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 mx-auto flex items-center justify-center mb-4 shadow-sm">
-                    <x-heroicon-o-check class="w-8 h-8" />
+                <div class="w-10 h-10 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-600 mx-auto flex items-center justify-center mb-4 shadow-sm">
+                    <x-heroicon-o-check class="w-5 h-5" />
                 </div>
-                <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Pengajuan Berhasil Dikirim!</h1>
+                <h1 class="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Pengajuan Berhasil Dikirim!</h1>
                 <p class="text-sm text-slate-500 mt-1 max-w-md mx-auto">
-                    Data pengajuan kamu sudah tercatat di sistem INVENTA dan masuk ke antrean loket Tata Usaha.
+                    Data pengajuan kamu sudah tercatat di sistem.
                 </p>
             </div>
 
-            <div class="my-8 p-5 sm:p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 gap-2">
+            <div class="my-6 sm:my-8 p-4 sm:p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
+                <div class="grid grid-cols-2 gap-3 pb-4 border-b border-slate-200">
                     <div>
-                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 block">Kode Transaksi</span>
-                        <span class="text-lg sm:text-xl font-mono font-extrabold text-teal-700 tracking-wide">{{ $loan->loan_code }}</span>
+                        <span class="receipt-label">Kode Transaksi</span>
+                        <span class="text-sm sm:text-xl font-extrabold text-teal-700 tracking-wide block">{{ $loan->loan_code }}</span>
                     </div>
-                    <div class="text-left sm:text-right">
-                        <span class="text-xs text-slate-400 block">Waktu Pengajuan</span>
-                        <span class="text-xs font-semibold text-slate-700">{{ $loan->requested_at->format('d M Y, H:i') }} WIB</span>
+                    <div class="text-right">
+                        <span class="receipt-label">Waktu Pengajuan</span>
+                        <span class="text-xs sm:text-sm font-semibold text-slate-700 block">{{ $loan->requested_at->format('d M Y, H:i') }} WIB</span>
                     </div>
                 </div>
 
-                <div class="space-y-2 pb-4 border-b border-slate-200 text-xs">
-                    <div class="flex items-center justify-between">
-                        <span class="text-slate-500 font-medium">Daftar Barang yang Dipinjam</span>
-                        <span class="text-[11px] text-teal-700 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-md font-semibold">Dalam Antrean</span>
+                <div class="space-y-2 pb-4 border-b border-slate-200">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="receipt-label">Barang Dipinjam</span>
+                        <span class="text-[11px] text-teal-700 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-md font-semibold whitespace-nowrap">Dalam Antrean</span>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         @foreach ($loan->items as $item)
-                            <div class="p-3 bg-white rounded-xl border border-slate-200 flex items-center justify-between shadow-xs">
-                                <div class="min-w-0 pr-2">
-                                    <span class="font-bold text-slate-900 block text-xs truncate">{{ $item->name }}</span>
+                            <div class="flex items-center justify-between gap-3">
+                                <div class="min-w-0 flex-1">
+                                    <span class="font-bold text-slate-900 block text-sm leading-snug">{{ $item->name }}</span>
                                     @if($item->description)
-                                        <span class="text-[11px] text-slate-400 block truncate">{{ $item->description }}</span>
+                                        <span class="text-xs text-slate-400 block mt-0.5">{{ $item->description }}</span>
                                     @endif
                                 </div>
-                                <span class="font-mono text-[10px] font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-1 rounded-md shrink-0">{{ $item->code }}</span>
+                                <span class="text-[11px] font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-1 rounded-md shrink-0 whitespace-nowrap">{{ $item->code }}</span>
                             </div>
                         @endforeach
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                    <div class="space-y-1">
-                        <span class="text-slate-400 block font-medium">Identitas Peminjam</span>
-                        <span class="text-sm font-bold text-slate-900 block">{{ $loan->borrower_name }}</span>
-                        <span class="text-slate-500 text-[11px] block">NIM: {{ $loan->borrower_id_number }} &bull; {{ $loan->study_program }}</span>
+                <div class="grid grid-cols-2 gap-x-4 gap-y-4">
+                    <div>
+                        <span class="receipt-label">Peminjam</span>
+                        <span class="receipt-value">{{ $loan->borrower_name }}</span>
+                        <span class="text-slate-500 text-[11px] block mt-0.5">{{ $loan->borrower_id_number }}</span>
+                        <span class="text-slate-500 text-[11px] block mt-0.5">{{ $loan->study_program }}</span>
                     </div>
 
-                    <div class="space-y-1">
-                        <span class="text-slate-400 block font-medium">Nomor WhatsApp</span>
-                        <span class="text-sm font-bold text-slate-900 block">{{ $loan->phone_number }}</span>
+                    <div>
+                        <span class="receipt-label">Lokasi</span>
+                        <span class="receipt-value">{{ $loan->destination_building }} &mdash; {{ $loan->destination_room }}</span>
                     </div>
 
-                    <div class="space-y-1 pt-2 sm:pt-0">
-                        <span class="text-slate-400 block font-medium">Lokasi Pemakaian</span>
-                        <span class="text-sm font-semibold text-slate-800 block">{{ $loan->destination_building }} &mdash; {{ $loan->destination_room }}</span>
+                    <div>
+                        <span class="receipt-label">WhatsApp</span>
+                        <span class="receipt-value">{{ $loan->phone_number }}</span>
                     </div>
 
-                    <div class="space-y-1 pt-2 sm:pt-0">
-                        <span class="text-slate-400 block font-medium">Estimasi Waktu Pengembalian</span>
-                        <span class="text-sm font-semibold text-slate-800 block">{{ $loan->expected_return_at->format('d M Y, H:i') }} WIB</span>
+                    <div>
+                        <span class="receipt-label">Pengembalian</span>
+                        <span class="receipt-value">{{ $loan->expected_return_at->format('d M Y, H:i') }} WIB</span>
                     </div>
-                </div>
 
-                <div class="pt-3 border-t border-slate-200 text-xs">
-                    <span class="text-slate-400 block font-medium mb-0.5">Keperluan:</span>
-                    <p class="text-slate-700 italic bg-white p-3 rounded-xl border border-slate-200 leading-relaxed">
-                        &ldquo;{{ $loan->purpose }}&rdquo;
-                    </p>
+                    <div class="col-span-2 pt-3 border-t border-slate-200">
+                        <span class="receipt-label">Alasan Peminjaman</span>
+                        <p class="text-sm text-slate-700 leading-relaxed mt-0.5">{{ $loan->purpose }}</p>
+                    </div>
                 </div>
             </div>
 
@@ -111,7 +159,7 @@
             </div>
 
             <div>
-                <a href="{{ route('loans.create') }}" class="w-full py-3.5 px-6 bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm rounded-2xl shadow-md shadow-teal-600/20 transition flex items-center justify-center gap-2 active:scale-[0.99] text-center">
+                <a href="{{ route('loans.create') }}" class="btn-primary">
                     <span>Selesai & Kembali ke Formulir</span>
                 </a>
             </div>

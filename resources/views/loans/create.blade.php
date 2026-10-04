@@ -5,12 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>INVENTA - Peminjaman Inventaris Kampus</title>
     <link rel="icon" type="image/svg+xml" href="/images/inventa-logo.svg">
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        .form-input {
+            width: 100%;
+            font-size: 0.875rem;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 0.625rem 0.875rem;
+            color: #0f172a;
+            transition: all 0.15s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #0d9488;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.2);
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 0.375rem;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            background-color: #0d9488;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.875rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(13, 148, 136, 0.2), 0 2px 4px -2px rgba(13, 148, 136, 0.2);
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-align: center;
+        }
+        .btn-primary:hover {
+            background-color: #0f766e;
+        }
+        .btn-primary:active {
+            transform: scale(0.99);
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col justify-between antialiased">
@@ -87,7 +146,7 @@
 
                 <!-- Navigasi form khusus Mobile -->
                 <div class="pt-2 lg:hidden">
-                    <button type="button" id="btn-to-form" class="w-full py-3.5 px-6 bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm rounded-2xl shadow-md shadow-teal-600/20 transition flex items-center justify-center gap-2 active:scale-[0.99]">
+                    <button type="button" id="btn-to-form" class="btn-primary">
                         <span>Lanjut Isi Formulir Peminjaman</span>
                     </button>
                 </div>
@@ -142,7 +201,7 @@
                                 @foreach ($selectedItemIds as $index => $selectedId)
                                     <div class="item-row flex items-center gap-2">
                                         <div class="flex-1">
-                                            <select name="item_ids[]" required class="item-select w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:bg-white transition">
+                                            <select name="item_ids[]" required class="item-select form-input py-3">
                                                 <option value="">Pilih Barang</option>
                                                 @forelse ($items as $item)
                                                     <option value="{{ $item->id }}" {{ $selectedId == $item->id ? 'selected' : '' }}>
@@ -165,7 +224,6 @@
                                     <x-heroicon-o-plus class="w-3.5 h-3.5 shrink-0" />
                                     <span>Tambah Barang Lain</span>
                                 </button>
-                                <span class="text-xs text-slate-400">Bisa memilih lebih dari 1 barang.</span>
                             </div>
                         </div>
 
@@ -179,31 +237,31 @@
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label for="borrower_id_number" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                                    <label for="borrower_id_number" class="form-label">
                                         NIM (Nomor Induk Mahasiswa) <span class="text-rose-500">*</span>
                                     </label>
-                                    <input type="text" name="borrower_id_number" id="borrower_id_number" value="{{ old('borrower_id_number') }}" required placeholder="2201010041" class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:bg-white transition">
+                                    <input type="text" name="borrower_id_number" id="borrower_id_number" value="{{ old('borrower_id_number') }}" required placeholder="2201010041" class="form-input">
                                 </div>
 
                                 <div>
-                                    <label for="borrower_name" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                                    <label for="borrower_name" class="form-label">
                                         Nama Lengkap <span class="text-rose-500">*</span>
                                     </label>
-                                    <input type="text" name="borrower_name" id="borrower_name" value="{{ old('borrower_name') }}" required placeholder="Nama lengkap sesuai KTM" class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:bg-white transition">
+                                    <input type="text" name="borrower_name" id="borrower_name" value="{{ old('borrower_name') }}" required placeholder="Nama lengkap sesuai KTM" class="form-input">
                                 </div>
 
                                 <div>
-                                    <label for="study_program" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                                    <label for="study_program" class="form-label">
                                         Program Studi <span class="text-rose-500">*</span>
                                     </label>
-                                    <input type="text" name="study_program" id="study_program" value="{{ old('study_program') }}" required placeholder="Informatika / Teknik Elektro" class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:bg-white transition">
+                                    <input type="text" name="study_program" id="study_program" value="{{ old('study_program') }}" required placeholder="Informatika / Teknik Elektro" class="form-input">
                                 </div>
 
                                 <div>
-                                    <label for="phone_number" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                                    <label for="phone_number" class="form-label">
                                         No. WhatsApp Aktif <span class="text-rose-500">*</span>
                                     </label>
-                                    <input type="tel" name="phone_number" id="phone_number" value="{{ old('phone_number') }}" required placeholder="081234567890" class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:bg-white transition">
+                                    <input type="tel" name="phone_number" id="phone_number" value="{{ old('phone_number') }}" required placeholder="081234567890" class="form-input">
                                 </div>
                             </div>
                         </div>
@@ -215,37 +273,37 @@
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label for="destination_building" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                                    <label for="destination_building" class="form-label">
                                         Gedung Tujuan <span class="text-rose-500">*</span>
                                     </label>
-                                    <input type="text" name="destination_building" id="destination_building" value="{{ old('destination_building') }}" required placeholder="Gedung Kuliah Bersama (GKB)" class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:bg-white transition">
+                                    <input type="text" name="destination_building" id="destination_building" value="{{ old('destination_building') }}" required placeholder="Gedung Kuliah Bersama (GKB)" class="form-input">
                                 </div>
 
                                 <div>
-                                    <label for="destination_room" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                                    <label for="destination_room" class="form-label">
                                         Ruangan / Lab <span class="text-rose-500">*</span>
                                     </label>
-                                    <input type="text" name="destination_room" id="destination_room" value="{{ old('destination_room') }}" required placeholder="Ruang 304 / Lab Jaringan 2" class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:bg-white transition">
+                                    <input type="text" name="destination_room" id="destination_room" value="{{ old('destination_room') }}" required placeholder="Ruang 304 / Lab Jaringan 2" class="form-input">
                                 </div>
                             </div>
 
                             <div>
-                                <label for="expected_return_at" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                                <label for="expected_return_at" class="form-label">
                                     Estimasi Waktu Pengembalian <span class="text-rose-500">*</span>
                                 </label>
-                                <input type="datetime-local" name="expected_return_at" id="expected_return_at" value="{{ old('expected_return_at', now()->addHours(3)->format('Y-m-d\TH:i')) }}" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:bg-white transition">
+                                <input type="datetime-local" name="expected_return_at" id="expected_return_at" value="{{ old('expected_return_at', now()->addHours(3)->format('Y-m-d\TH:i')) }}" required class="form-input">
                             </div>
 
                             <div>
-                                <label for="purpose" class="block text-xs font-semibold text-slate-700 mb-1.5">
-                                    Keperluan Kegiatan <span class="text-rose-500">*</span>
+                                <label for="purpose" class="form-label">
+                                    Alasan peminjaman <span class="text-rose-500">*</span>
                                 </label>
-                                <textarea name="purpose" id="purpose" rows="3" required placeholder="Presentasi tugas mata kuliah Rekayasa Perangkat Lunak" class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 focus:bg-white transition leading-relaxed">{{ old('purpose') }}</textarea>
+                                <textarea name="purpose" id="purpose" rows="3" required placeholder="Presentasi tugas mata kuliah Rekayasa Perangkat Lunak" class="form-input leading-relaxed">{{ old('purpose') }}</textarea>
                             </div>
                         </div>
 
                         <div class="pt-4 border-t border-slate-100">
-                            <button type="submit" class="w-full py-3.5 px-6 bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm rounded-2xl shadow-md shadow-teal-600/20 transition active:scale-[0.99] flex items-center justify-center gap-2">
+                            <button type="submit" class="btn-primary">
                                 <span>Ajukan Peminjaman Sekarang</span>
                             </button>
                             <p class="text-center text-xs text-slate-400 mt-3">
