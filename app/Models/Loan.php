@@ -25,6 +25,11 @@ class Loan extends Model
         return $this->belongsToMany(Item::class, 'loan_items')->withTimestamps();
     }
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function officer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'officer_id');
