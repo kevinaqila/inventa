@@ -30,6 +30,7 @@ class LoansTable
                     ->badge()
                     ->separator(',')
                     ->searchable()
+                    ->placeholder('-')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('borrower_name')
                     ->label('Peminjam')
@@ -41,15 +42,18 @@ class LoansTable
                     }),
                 TextColumn::make('destination_building')
                     ->label('Gedung')
+                    ->default('-')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('destination_room')
                     ->label('Ruangan')
+                    ->default('-')
                     ->limit(12)
                     ->tooltip(function (TextColumn $column, $state): ?string {
                         return (strlen($state ?? '') > ($column->getCharacterLimit() ?? 12)) ? $state : null;
                     }),
                 TextColumn::make('lecturer_name')
                     ->label('Dosen Pengajar')
+                    ->default('-')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('requested_at')
@@ -58,10 +62,17 @@ class LoansTable
                     ->sortable(),
                 TextColumn::make('expected_return_at')
                     ->label('Batas Pengembalian')
-                    ->dateTime('d M Y, H:i')
+                    ->default('-')
+                    ->formatStateUsing(fn ($state) => ($state && $state !== '-') ? \Carbon\Carbon::parse($state)->translatedFormat('d M Y, H:i') : '-')
                     ->color(fn (Loan $record) => $record->isOverdue() ? 'danger' : null)
                     ->weight(fn (Loan $record) => $record->isOverdue() ? 'bold' : null)
                     ->sortable(),
+                TextColumn::make('returned_at')
+                    ->label('Waktu Dikembalikan')
+                    ->default('-')
+                    ->formatStateUsing(fn ($state) => ($state && $state !== '-') ? \Carbon\Carbon::parse($state)->translatedFormat('d M Y, H:i') : '-')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()

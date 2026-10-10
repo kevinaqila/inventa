@@ -22,30 +22,40 @@ class LoanInfolist
                 TextEntry::make('borrower_id_number')
                     ->label('NIM / Identitas'),
                 TextEntry::make('study_program')
-                    ->label('Program Studi'),
+                    ->label('Program Studi')
+                    ->default('-'),
                 TextEntry::make('phone_number')
-                    ->label('Nomor WhatsApp'),
+                    ->label('Nomor WhatsApp')
+                    ->default('-'),
                 TextEntry::make('destination_building')
-                    ->label('Gedung'),
+                    ->label('Gedung')
+                    ->default('-'),
                 TextEntry::make('destination_room')
-                    ->label('Ruangan'),
+                    ->label('Ruangan')
+                    ->default('-'),
                 TextEntry::make('lecturer_name')
-                    ->label('Dosen Pengajar'),
+                    ->label('Dosen Pengajar')
+                    ->default('-'),
                 TextEntry::make('purpose')
                     ->label('Keperluan')
+                    ->default('-')
                     ->columnSpanFull(),
                 TextEntry::make('requested_at')
                     ->label('Waktu Pengajuan')
-                    ->dateTime(),
+                    ->default('-')
+                    ->formatStateUsing(fn ($state) => ($state && $state !== '-') ? \Carbon\Carbon::parse($state)->translatedFormat('d M Y, H:i') : '-'),
                 TextEntry::make('expected_return_at')
                     ->label('Rencana Pengembalian')
-                    ->dateTime(),
+                    ->default('-')
+                    ->formatStateUsing(fn ($state) => ($state && $state !== '-') ? \Carbon\Carbon::parse($state)->translatedFormat('d M Y, H:i') : '-'),
                 TextEntry::make('approved_at')
                     ->label('Waktu Disetujui')
-                    ->dateTime(),
+                    ->default('-')
+                    ->formatStateUsing(fn ($state) => ($state && $state !== '-') ? \Carbon\Carbon::parse($state)->translatedFormat('d M Y, H:i') : '-'),
                 TextEntry::make('returned_at')
                     ->label('Waktu Dikembalikan')
-                    ->dateTime(),
+                    ->default('-')
+                    ->formatStateUsing(fn ($state) => ($state && $state !== '-') ? \Carbon\Carbon::parse($state)->translatedFormat('d M Y, H:i') : '-'),
                 TextEntry::make('status')
                     ->label('Status')
                     ->badge()
@@ -88,9 +98,11 @@ class LoanInfolist
                     }),
                 TextEntry::make('officer_notes')
                     ->label('Catatan Petugas')
+                    ->default('-')
                     ->columnSpanFull(),
                 TextEntry::make('officer.name')
-                    ->label('Petugas yang Memproses'),
+                    ->label('Petugas yang Memproses')
+                    ->default('-'),
             ]);
     }
 }

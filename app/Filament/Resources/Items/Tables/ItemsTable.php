@@ -19,10 +19,12 @@ class ItemsTable
             ->columns([
                 TextColumn::make('code')
                     ->label('Kode Barang')
+                    ->placeholder('-')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('name')
                     ->label('Nama Barang')
+                    ->placeholder('-')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('status')
@@ -62,6 +64,7 @@ class ItemsTable
                 TextColumn::make('created_at')
                     ->label('Didaftarkan')
                     ->dateTime()
+                    ->placeholder('-')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

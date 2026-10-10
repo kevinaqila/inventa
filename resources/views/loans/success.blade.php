@@ -120,30 +120,30 @@
                 <div class="grid grid-cols-2 gap-x-4 gap-y-4">
                     <div>
                         <span class="receipt-label">Peminjam</span>
-                        <span class="receipt-value">{{ $loan->borrower_name }}</span>
-                        <span class="text-slate-500 text-[11px] block mt-0.5">{{ $loan->borrower_id_number }}</span>
-                        <span class="text-slate-500 text-[11px] block mt-0.5">{{ $loan->study_program }}</span>
+                        <span class="receipt-value">{{ $loan->borrower_name ?: '-' }}</span>
+                        <span class="text-slate-500 text-[11px] block mt-0.5">{{ $loan->borrower_id_number ?: '-' }}</span>
+                        <span class="text-slate-500 text-[11px] block mt-0.5">{{ $loan->study_program ?: '-' }}</span>
                     </div>
 
                     <div>
                         <span class="receipt-label">Lokasi</span>
-                        <span class="receipt-value">{{ $loan->destination_building }} &mdash; {{ $loan->destination_room }}</span>
-                        <span class="text-slate-500 text-[11px] block mt-0.5">WhatsApp: {{ $loan->phone_number }}</span>
+                        <span class="receipt-value">{{ $loan->destination_building ?: '-' }} &mdash; {{ $loan->destination_room ?: '-' }}</span>
+                        <span class="text-slate-500 text-[11px] block mt-0.5">WhatsApp: {{ $loan->phone_number ?: '-' }}</span>
                     </div>
 
                     <div>
                         <span class="receipt-label">Dosen Pengajar</span>
-                        <span class="receipt-value">{{ $loan->lecturer_name }}</span>
+                        <span class="receipt-value">{{ $loan->lecturer_name ?: '-' }}</span>
                     </div>
 
                     <div>
                         <span class="receipt-label">Rencana Pengembalian</span>
-                        <span class="receipt-value">{{ $loan->expected_return_at->format('d M Y, H:i') }} WIB</span>
+                        <span class="receipt-value">{{ $loan->expected_return_at ? $loan->expected_return_at->format('d M Y, H:i') . ' WIB' : '-' }}</span>
                     </div>
 
                     <div class="col-span-2 pt-3 border-t border-slate-200">
                         <span class="receipt-label">Alasan Peminjaman</span>
-                        <p class="text-sm text-slate-700 leading-relaxed mt-0.5">{{ $loan->purpose }}</p>
+                        <p class="text-sm text-slate-700 leading-relaxed mt-0.5">{{ $loan->purpose ?: '-' }}</p>
                     </div>
                 </div>
             </div>
