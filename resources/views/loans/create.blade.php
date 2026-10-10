@@ -75,15 +75,23 @@
 <body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col justify-between antialiased">
     <header class="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
-            <a href="{{ route('loans.create') }}" class="flex items-center gap-1 group">
+            <a href="{{ route('home') }}" class="flex items-center gap-1 group">
                 <img src="/images/inventa-logo.svg" alt="INVENTA Logo" class="w-10 h-10 group-hover:scale-105 transition drop-shadow-sm">
                 <img src="/images/inventa-text.svg" alt="INVENTA" class="h-5 w-auto">
             </a>
-            <div class="flex items-center gap-3">
-                <div class="flex items-center gap-2 text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
+            <div class="flex items-center gap-2 sm:gap-3">
+                <div class="hidden sm:flex items-center gap-2 text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span>Jam Buka (08:00 - 16:00)</span>
                 </div>
+                @auth
+                    <form action="{{ route('logout') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="text-xs font-semibold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 px-3 py-1.5 rounded-xl transition">
+                            Keluar
+                        </button>
+                    </form>
+                @endauth
             </div>
         </div>
     </header>
@@ -205,7 +213,7 @@
                                                 <option value="">Pilih Barang</option>
                                                 @forelse ($items as $item)
                                                     <option value="{{ $item->id }}" {{ $selectedId == $item->id ? 'selected' : '' }}>
-                                                        {{ $item->name }} (Kode: {{ $item->code }})
+                                                        {{ $item->name }}
                                                     </option>
                                                 @empty
                                                     <option value="" disabled>Saat ini tidak ada barang yang tersedia</option>
@@ -227,42 +235,32 @@
                             </div>
                         </div>
 
-                        <div class="py-6 space-y-4">
-                            <div class="flex items-center justify-between">
-                                <label class="block text-xs font-bold tracking-wider text-slate-900">
-                                    Identitas Peminjam
-                                </label>
-                                <span class="text-xs text-slate-400">Sesuai KTM Mahasiswa</span>
+                        <div class="py-3 px-3.5 bg-slate-50/80 rounded-2xl border border-slate-200/80 text-xs my-2">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <div class="text-slate-600 leading-relaxed">
+                                    <span class="text-slate-400">Identitas Peminjam</span><br>
+                                    <strong class="text-slate-900 font-semibold">{{ auth()->user()->name }}</strong><br>
+                                    <span class="text-slate-600">{{ auth()->user()->nim }} - {{ auth()->user()->study_program }}</span>
+                                </div>
+                                <div class="flex items-center gap-2 shrink-0">
+                                    <span class="text-slate-500">WA: <strong id="wa-display-text" class="text-slate-800 font-semibold">{{ old('phone_number', auth()->user()->phone_number) }}</strong></span>
+                                    <button type="button" id="btn-toggle-wa" class="text-[11px] font-semibold text-teal-700 hover:text-teal-800 hover:underline">
+                                        Ubah Kontak
+                                    </button>
+                                </div>
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label for="borrower_id_number" class="form-label">
-                                        NIM (Nomor Induk Mahasiswa) <span class="text-rose-500">*</span>
-                                    </label>
-                                    <input type="text" name="borrower_id_number" id="borrower_id_number" value="{{ old('borrower_id_number') }}" required placeholder="2201010041" class="form-input">
+                            <div id="wa-edit-field" class="{{ $errors->has('phone_number') ? 'block' : 'hidden' }} mt-3 pt-3 border-t border-slate-200">
+                                <label for="phone_number" class="block text-[11px] font-semibold text-slate-700 mb-1">
+                                    No. WhatsApp untuk Peminjaman Ini <span class="text-rose-500">*</span>
+                                </label>
+                                <div class="flex items-center gap-2">
+                                    <input type="tel" name="phone_number" id="phone_number" value="{{ old('phone_number', auth()->user()->phone_number) }}" required placeholder="Contoh: 081234567890" class="form-input text-xs py-2">
+                                    <button type="button" id="btn-close-wa" class="text-xs font-semibold px-3 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl transition shrink-0">
+                                        Tutup
+                                    </button>
                                 </div>
-
-                                <div>
-                                    <label for="borrower_name" class="form-label">
-                                        Nama Lengkap <span class="text-rose-500">*</span>
-                                    </label>
-                                    <input type="text" name="borrower_name" id="borrower_name" value="{{ old('borrower_name') }}" required placeholder="Nama lengkap sesuai KTM" class="form-input">
-                                </div>
-
-                                <div>
-                                    <label for="study_program" class="form-label">
-                                        Program Studi <span class="text-rose-500">*</span>
-                                    </label>
-                                    <input type="text" name="study_program" id="study_program" value="{{ old('study_program') }}" required placeholder="Informatika / Teknik Elektro" class="form-input">
-                                </div>
-
-                                <div>
-                                    <label for="phone_number" class="form-label">
-                                        No. WhatsApp Aktif <span class="text-rose-500">*</span>
-                                    </label>
-                                    <input type="tel" name="phone_number" id="phone_number" value="{{ old('phone_number') }}" required placeholder="081234567890" class="form-input">
-                                </div>
+                                <p class="text-[11px] text-slate-400 mt-1">Nomor ini akan digunakan petugas untuk konfirmasi serah terima barang.</p>
                             </div>
                         </div>
 
@@ -287,11 +285,20 @@
                                 </div>
                             </div>
 
-                            <div>
-                                <label for="expected_return_at" class="form-label">
-                                    Estimasi Waktu Pengembalian <span class="text-rose-500">*</span>
-                                </label>
-                                <input type="datetime-local" name="expected_return_at" id="expected_return_at" value="{{ old('expected_return_at', now()->addHours(3)->format('Y-m-d\TH:i')) }}" required class="form-input">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="lecturer_name" class="form-label">
+                                        Dosen Pengajar <span class="text-rose-500">*</span>
+                                    </label>
+                                    <input type="text" name="lecturer_name" id="lecturer_name" value="{{ old('lecturer_name') }}" required class="form-input">
+                                </div>
+
+                                <div>
+                                    <label for="expected_return_at" class="form-label">
+                                        Estimasi Waktu Pengembalian <span class="text-rose-500">*</span>
+                                    </label>
+                                    <input type="datetime-local" name="expected_return_at" id="expected_return_at" value="{{ old('expected_return_at', now()->addHours(3)->format('Y-m-d\TH:i')) }}" required class="form-input">
+                                </div>
                             </div>
 
                             <div>
@@ -400,6 +407,33 @@
                 // Attach remove events to existing rows
                 container.querySelectorAll('.btn-remove-item').forEach(attachRemoveEvent);
                 syncRemoveButtons();
+            }
+
+            const btnToggleWa = document.getElementById('btn-toggle-wa');
+            const btnCloseWa = document.getElementById('btn-close-wa');
+            const waEditField = document.getElementById('wa-edit-field');
+            const waInput = document.getElementById('phone_number');
+            const waDisplayText = document.getElementById('wa-display-text');
+
+            if (btnToggleWa && waEditField) {
+                btnToggleWa.addEventListener('click', function () {
+                    waEditField.classList.toggle('hidden');
+                    if (!waEditField.classList.contains('hidden') && waInput) {
+                        waInput.focus();
+                    }
+                });
+            }
+
+            if (btnCloseWa && waEditField) {
+                btnCloseWa.addEventListener('click', function () {
+                    waEditField.classList.add('hidden');
+                });
+            }
+
+            if (waInput && waDisplayText) {
+                waInput.addEventListener('input', function () {
+                    waDisplayText.textContent = this.value.trim() || '-';
+                });
             }
         });
     </script>

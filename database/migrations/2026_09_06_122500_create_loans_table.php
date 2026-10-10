@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('loans', function (Blueprint $table) {
             $table->id();
             $table->string('loan_code')->unique();
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
 
             $table->string('borrower_id_number');
             $table->string('borrower_name');
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->string('destination_building');
             $table->string('destination_room');
             $table->text('purpose');
+            $table->string('lecturer_name');
 
             $table->dateTime('requested_at');
             $table->dateTime('expected_return_at');

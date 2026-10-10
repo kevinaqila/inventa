@@ -107,14 +107,11 @@
                     </div>
                     <div class="space-y-2">
                         @foreach ($loan->items as $item)
-                            <div class="flex items-center justify-between gap-3">
-                                <div class="min-w-0 flex-1">
-                                    <span class="font-bold text-slate-900 block text-sm leading-snug">{{ $item->name }}</span>
-                                    @if($item->description)
-                                        <span class="text-xs text-slate-400 block mt-0.5">{{ $item->description }}</span>
-                                    @endif
-                                </div>
-                                <span class="text-[11px] font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-1 rounded-md shrink-0 whitespace-nowrap">{{ $item->code }}</span>
+                            <div class="py-1">
+                                <span class="font-bold text-slate-900 block text-sm leading-snug">{{ $item->name }}</span>
+                                @if($item->description)
+                                    <span class="text-xs text-slate-400 block mt-0.5">{{ $item->description }}</span>
+                                @endif
                             </div>
                         @endforeach
                     </div>
@@ -131,15 +128,16 @@
                     <div>
                         <span class="receipt-label">Lokasi</span>
                         <span class="receipt-value">{{ $loan->destination_building }} &mdash; {{ $loan->destination_room }}</span>
+                        <span class="text-slate-500 text-[11px] block mt-0.5">WhatsApp: {{ $loan->phone_number }}</span>
                     </div>
 
                     <div>
-                        <span class="receipt-label">WhatsApp</span>
-                        <span class="receipt-value">{{ $loan->phone_number }}</span>
+                        <span class="receipt-label">Dosen Pengajar</span>
+                        <span class="receipt-value">{{ $loan->lecturer_name }}</span>
                     </div>
 
                     <div>
-                        <span class="receipt-label">Pengembalian</span>
+                        <span class="receipt-label">Rencana Pengembalian</span>
                         <span class="receipt-value">{{ $loan->expected_return_at->format('d M Y, H:i') }} WIB</span>
                     </div>
 
@@ -154,7 +152,7 @@
                 <x-heroicon-o-information-circle class="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                 <div class="leading-relaxed">
                     <span class="font-bold block mb-0.5 text-amber-900">Langkah Pengambilan Barang</span>
-                    Tunjukkan <strong>Kode Transaksi</strong> ini ke petugas di <strong>Ruang TU</strong> dalam batas waktu <strong>30 menit</strong> dengan membawa <strong>KTM asli</strong>.
+                    Tunjukkan <strong>Transaksi</strong> ini ke petugas di <strong>Ruang TU</strong> dalam batas waktu <strong>30 menit</strong> dengan membawa <strong>Kartu Identitas asli</strong>.
                 </div>
             </div>
 
