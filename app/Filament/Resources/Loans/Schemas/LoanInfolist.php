@@ -29,6 +29,8 @@ class LoanInfolist
                     ->label('Gedung'),
                 TextEntry::make('destination_room')
                     ->label('Ruangan'),
+                TextEntry::make('lecturer_name')
+                    ->label('Dosen Pengajar'),
                 TextEntry::make('purpose')
                     ->label('Keperluan')
                     ->columnSpanFull(),
@@ -72,16 +74,17 @@ class LoanInfolist
                     }),
                 TextEntry::make('return_condition')
                     ->label('Kondisi Pengembalian')
-                    ->badge()
-                    ->formatStateUsing(fn (?string $state): ?string => match ($state) {
+                    ->default('-')
+                    ->formatStateUsing(fn (?string $state): string => match ($state) {
                         'good' => 'Baik',
                         'damaged' => 'Rusak',
-                        default => $state ?? '-',
+                        default => '-',
                     })
-                    ->color(fn (?string $state): string => match ($state) {
+                    ->badge(fn (?string $state): bool => in_array($state, ['good', 'damaged']))
+                    ->color(fn (?string $state): ?string => match ($state) {
                         'good' => 'success',
                         'damaged' => 'danger',
-                        default => 'gray',
+                        default => null,
                     }),
                 TextEntry::make('officer_notes')
                     ->label('Catatan Petugas')

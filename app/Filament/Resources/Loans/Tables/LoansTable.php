@@ -48,6 +48,10 @@ class LoansTable
                     ->tooltip(function (TextColumn $column, $state): ?string {
                         return (strlen($state ?? '') > ($column->getCharacterLimit() ?? 12)) ? $state : null;
                     }),
+                TextColumn::make('lecturer_name')
+                    ->label('Dosen Pengajar')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('requested_at')
                     ->label('Waktu Peminjaman')
                     ->dateTime('d M Y, H:i')
@@ -87,16 +91,17 @@ class LoansTable
                     ->sortable(),
                 TextColumn::make('return_condition')
                     ->label('Kondisi')
-                    ->badge()
-                    ->formatStateUsing(fn (?string $state): ?string => match ($state) {
+                    ->default('-')
+                    ->formatStateUsing(fn (?string $state): string => match ($state) {
                         'good' => 'Baik',
                         'damaged' => 'Rusak',
-                        default => $state ?? '-',
+                        default => '-',
                     })
-                    ->color(fn (?string $state): string => match ($state) {
+                    ->badge(fn (?string $state): bool => in_array($state, ['good', 'damaged']))
+                    ->color(fn (?string $state): ?string => match ($state) {
                         'good' => 'success',
                         'damaged' => 'danger',
-                        default => 'gray',
+                        default => null,
                     }),
             ])
             ->defaultSort('requested_at', 'desc')

@@ -53,6 +53,10 @@ class LoanForm
                     ->label('Ruangan')
                     ->required()
                     ->maxLength(255),
+                TextInput::make('lecturer_name')
+                    ->label('Dosen Pengajar')
+                    ->required()
+                    ->maxLength(255),
                 Textarea::make('purpose')
                     ->label('Keperluan Peminjaman')
                     ->required()
