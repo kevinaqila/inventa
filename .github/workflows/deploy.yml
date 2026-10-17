@@ -13,7 +13,7 @@ jobs:
       - name: ⬇️ Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - name: 📤 Sync Files to Server
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
