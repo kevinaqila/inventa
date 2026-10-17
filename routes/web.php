@@ -2,7 +2,6 @@
  
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PublicLoanController;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PublicLoanController::class, 'home'])->name('home');
@@ -27,28 +26,5 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/loans/success/{code}', [PublicLoanController::class, 'success'])->name('loans.success');
-
-Route::get('/artisan/migrate-fresh', function () {
-    Artisan::call('migrate:fresh', [
-        '--force' => true,
-        '--seed' => true,
-    ]);
-
-    return '<pre style="background:#0f172a;color:#38bdf8;padding:20px;font-family:monospace;border-radius:8px;">'
-        . "=== FASTPANEL ARTISAN EXECUTION (migrate:fresh --seed) ===\n\n"
-        . htmlspecialchars(Artisan::output())
-        . '</pre>';
-});
-
-Route::get('/artisan/migrate', function () {
-    Artisan::call('migrate', [
-        '--force' => true,
-    ]);
-
-    return '<pre style="background:#0f172a;color:#38bdf8;padding:20px;font-family:monospace;border-radius:8px;">'
-        . "=== FASTPANEL ARTISAN EXECUTION (migrate) ===\n\n"
-        . htmlspecialchars(Artisan::output())
-        . '</pre>';
-});
 
 
