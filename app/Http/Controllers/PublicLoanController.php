@@ -106,4 +106,101 @@ class PublicLoanController extends Controller
 
         return view('loans.success', compact('loan'));
     }
+
+    public function myLoans()
+    {
+        $userId = auth()->id();
+        $userNim = auth()->user()->nim;
+
+        $loans = Loan::with('items')
+            ->where(function ($query) use ($userId, $userNim) {
+                $query->where('user_id', $userId);
+                if ($userNim) {
+                    $query->orWhere('borrower_id_number', $userNim);
+                }
+            })
+            ->latest('requested_at')
+            ->get();
+
+        $activeLoans = $loans->filter(function ($loan) {
+            return in_array($loan->status, ['pending', 'borrowed', 'return_pending']);
+        });
+
+        $historyLoans = $loans->filter(function ($loan) {
+            return in_array($loan->status, ['returned', 'rejected', 'expired']);
+        });
+
+        return view('loans.my', compact('activeLoans', 'historyLoans'));
+    }
+
+    public function showReturnForm(string $code)
+    {
+        $loan = Loan::with('items')
+            ->where('loan_code', $code)
+            ->firstOrFail();
+
+        if ($loan->user_id !== auth()->id() && $loan->borrower_id_number !== auth()->user()->nim) {
+            abort(403, 'Akses dibatasi.');
+        }
+
+        if ($loan->status === 'return_pending') {
+            return redirect()->route('loans.my')->with('info', 'Pengajuan pengembalian untuk transaksi ini sudah dikirim dan sedang menunggu verifikasi petugas TU.');
+        }
+
+        if ($loan->status !== 'borrowed') {
+            return redirect()->route('loans.my')->with('error', 'Status peminjaman ini tidak dapat diajukan pengembalian.');
+        }
+
+        return view('loans.return', compact('loan'));
+    }
+
+    public function submitReturn(Request $request, string $code)
+    {
+        $loan = Loan::with('items')
+            ->where('loan_code', $code)
+            ->firstOrFail();
+
+        if ($loan->user_id !== auth()->id() && $loan->borrower_id_number !== auth()->user()->nim) {
+            abort(403, 'Akses dibatasi.');
+        }
+
+        if ($loan->status !== 'borrowed') {
+            return redirect()->route('loans.my')->with('error', 'Transaksi ini tidak dalam status sedang dipinjam.');
+        }
+
+        $validated = $request->validate([
+            'photo' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'return_notes' => 'nullable|string|max:500',
+        ], [
+            'photo.required' => 'Foto bukti kondisi barang wajib diambil.',
+            'photo.image' => 'File harus berupa gambar.',
+            'photo.mimes' => 'Format gambar harus JPG, PNG, atau WEBP.',
+            'photo.max' => 'Ukuran gambar maksimal 5 MB.',
+        ]);
+
+        $file = $request->file('photo');
+        $cleanCode = preg_replace('/[^A-Za-z0-9\-]/', '', $loan->loan_code);
+        $filename = 'return_' . strtolower($cleanCode) . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+        $destinationPath = public_path('uploads/returns');
+        if (! file_exists($destinationPath)) {
+            mkdir($destinationPath, 0755, true);
+        }
+        $file->move($destinationPath, $filename);
+
+        $updateData = [
+            'status' => 'return_pending',
+            'return_photo_path' => 'uploads/returns/' . $filename,
+            'return_requested_at' => now(),
+        ];
+
+        if (! empty($validated['return_notes'])) {
+            $notesPrefix = $loan->officer_notes ? $loan->officer_notes . "\n\n" : '';
+            $updateData['officer_notes'] = $notesPrefix . '[Catatan Peminjam: ' . $validated['return_notes'] . ']';
+        }
+
+        $loan->update($updateData);
+
+        return redirect()->route('loans.my')->with('success', 'Bukti pengembalian berhasil diunggah! Silakan bawa fisik barang ke loket TU untuk verifikasi dan serah terima kartu identitas (KTM).');
+    }
 }

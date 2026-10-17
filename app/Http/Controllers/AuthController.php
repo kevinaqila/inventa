@@ -98,6 +98,43 @@ class AuthController extends Controller
         return redirect()->route('login')->with('success', 'Akun berhasil dibuat! Silakan masuk menggunakan email dan password Anda.');
     }
 
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'nim' => 'required|string|max:50|unique:users,nim,' . $user->id,
+            'study_program' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:30',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:8',
+        ], [
+            'name.required' => 'Nama lengkap wajib diisi.',
+            'nim.required' => 'NIM wajib diisi.',
+            'nim.unique' => 'NIM ini sudah terdaftar oleh pengguna lain.',
+            'study_program.required' => 'Program studi wajib diisi.',
+            'phone_number.required' => 'Nomor WhatsApp wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
+            'email.unique' => 'Email ini sudah terdaftar oleh pengguna lain.',
+            'password.min' => 'Password baru minimal terdiri dari 8 karakter.',
+        ]);
+
+        $user->name = $validated['name'];
+        $user->nim = $validated['nim'];
+        $user->study_program = $validated['study_program'];
+        $user->phone_number = $validated['phone_number'];
+        $user->email = $validated['email'];
+
+        if (!empty($validated['password'])) {
+            $user->password = Hash::make($validated['password']);
+        }
+
+        $user->save();
+
+        return back()->with('success', 'Profil akun Anda berhasil diperbarui!');
+    }
+
     public function logout(Request $request)
     {
         Auth::logout();
