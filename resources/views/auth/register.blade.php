@@ -178,8 +178,8 @@
         </div>
     </main>
 
-    <footer class="py-6 text-center text-xs text-slate-400">
-        &copy; {{ date('Y') }} <strong class="text-slate-600 font-semibold">INVENTA</strong> - Sistem Inventaris Kampus
+    <footer class="py-6 text-center text-xs text-slate-500">
+        &copy; {{ date('Y') }} <strong class="text-slate-700 font-semibold">INVENTA</strong> &bull; Dikembangkan oleh <strong class="text-slate-700 font-semibold">Tim NusaWorks</strong> | S1 Sistem Informasi FT UNESA
     </footer>
 </body>
 </html>
