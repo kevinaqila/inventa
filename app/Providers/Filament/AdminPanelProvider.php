@@ -58,6 +58,10 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::FOOTER,
+                fn () => new HtmlString('<div style="padding: 1.25rem 1rem; text-align: center; font-size: 0.75rem; color: #94a3b8; border-top: 1px solid rgba(148, 163, 184, 0.12);">&copy; ' . date('Y') . ' <strong style="font-weight: 600; color: #cbd5e1;">INVENTA</strong> &bull; Dikembangkan oleh <strong style="font-weight: 600; color: #cbd5e1;">Tim NusaWorks</strong> | S1 Sistem Informasi FT UNESA</div>')
+            )
             ->spa();
     }
 }

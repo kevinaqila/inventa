@@ -82,8 +82,9 @@ class LoansTable
                         }
 
                         return match ($state) {
-                            'pending' => 'Menunggu',
+                            'pending' => 'Menunggu ACC',
                             'borrowed' => 'Sedang Dipinjam',
+                            'return_pending' => 'Menunggu Pengembalian',
                             'returned' => 'Dikembalikan',
                             'rejected' => 'Ditolak',
                             'expired' => 'Kedaluwarsa',
@@ -94,6 +95,7 @@ class LoansTable
                         $record->isOverdue() => 'danger',
                         $state === 'pending' => 'warning',
                         $state === 'borrowed' => 'info',
+                        $state === 'return_pending' => 'warning',
                         $state === 'returned' => 'success',
                         $state === 'rejected' => 'danger',
                         $state === 'expired' => 'gray',
@@ -120,8 +122,9 @@ class LoansTable
                 SelectFilter::make('status')
                     ->label('Status Peminjaman')
                     ->options([
-                        'pending' => 'Menunggu',
+                        'pending' => 'Menunggu ACC',
                         'borrowed' => 'Sedang Dipinjam',
+                        'return_pending' => 'Menunggu Pengembalian',
                         'returned' => 'Dikembalikan',
                         'rejected' => 'Ditolak',
                         'expired' => 'Kedaluwarsa',
@@ -172,12 +175,20 @@ class LoansTable
                             ->danger()
                             ->send();
                     }),
+                Action::make('view_return_photo')
+                    ->label('')
+                    ->icon('heroicon-o-camera')
+                    ->color('warning')
+                    ->tooltip('Lihat Foto Bukti Pengembalian')
+                    ->visible(fn ($record) => !empty($record->return_photo_path))
+                    ->url(fn ($record) => asset($record->return_photo_path))
+                    ->openUrlInNewTab(),
                 Action::make('return')
                     ->label('')
                     ->icon('heroicon-o-arrow-uturn-left')
                     ->color('info')
                     ->tooltip('Proses Pengembalian Barang')
-                    ->visible(fn ($record) => $record->status === 'borrowed')
+                    ->visible(fn ($record) => in_array($record->status, ['borrowed', 'return_pending']))
                     ->modalHeading('Proses Pengembalian Barang')
                     ->modalSubmitActionLabel('Simpan Pengembalian')
                     ->schema([
@@ -193,11 +204,21 @@ class LoansTable
                             ->label('Catatan Petugas (Opsional)'),
                     ])
                     ->action(function ($record, array $data) {
+                        $officerNotes = $data['officer_notes'] ?? null;
+                        if ($record->officer_notes && $officerNotes) {
+                            $finalNotes = $record->officer_notes . "\n\n[Catatan Petugas: " . $officerNotes . "]";
+                        } elseif ($officerNotes) {
+                            $finalNotes = '[Catatan Petugas: ' . $officerNotes . ']';
+                        } else {
+                            $finalNotes = $record->officer_notes;
+                        }
+
                         $record->update([
                             'status' => 'returned',
                             'returned_at' => now(),
                             'return_condition' => $data['return_condition'],
-                            'officer_notes' => $data['officer_notes'] ?? null,
+                            'officer_notes' => $finalNotes,
+                            'officer_id' => auth()->id(),
                         ]);
 
                         $itemStatus = $data['return_condition'] === 'damaged' ? 'damaged' : 'available';

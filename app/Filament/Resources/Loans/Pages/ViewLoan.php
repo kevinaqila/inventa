@@ -64,13 +64,22 @@ class ViewLoan extends ViewRecord
                 ->label('Ubah')
                 ->visible(fn ($record) => $record->status === 'pending'),
 
+            Action::make('view_return_photo')
+                ->label('Lihat Foto Bukti')
+                ->icon('heroicon-o-camera')
+                ->color('warning')
+                ->visible(fn ($record) => !empty($record->return_photo_path))
+                ->url(fn ($record) => asset($record->return_photo_path))
+                ->openUrlInNewTab(),
+
             Action::make('return')
-                ->label('Barang Kembali')
+                ->label(fn ($record) => $record->status === 'return_pending' ? 'Konfirmasi Pengembalian' : 'Barang Kembali')
                 ->icon('heroicon-o-arrow-uturn-left')
                 ->color('info')
-                ->visible(fn ($record) => $record->status === 'borrowed')
-                ->modalHeading('Proses Pengembalian Barang')
-                ->modalSubmitActionLabel('Simpan Pengembalian')
+                ->visible(fn ($record) => in_array($record->status, ['borrowed', 'return_pending']))
+                ->modalHeading(fn ($record) => $record->status === 'return_pending' ? 'Konfirmasi Verifikasi Pengembalian' : 'Proses Pengembalian Barang')
+                ->modalDescription(fn ($record) => $record->status === 'return_pending' ? 'Mahasiswa telah mengunggah bukti foto fisik barang. Pastikan kondisi fisik barang inventaris telah diperiksa di loket TU sebelum menyelesaikan transaksi.' : null)
+                ->modalSubmitActionLabel('Simpan & Selesaikan')
                 ->schema([
                     Select::make('return_condition')
                         ->label('Kondisi Saat Dikembalikan')
@@ -84,11 +93,21 @@ class ViewLoan extends ViewRecord
                         ->label('Catatan Petugas (Opsional)'),
                 ])
                 ->action(function ($record, array $data) {
+                    $officerNotes = $data['officer_notes'] ?? null;
+                    if ($record->officer_notes && $officerNotes) {
+                        $finalNotes = $record->officer_notes . "\n\n[Catatan Petugas: " . $officerNotes . "]";
+                    } elseif ($officerNotes) {
+                        $finalNotes = '[Catatan Petugas: ' . $officerNotes . ']';
+                    } else {
+                        $finalNotes = $record->officer_notes;
+                    }
+
                     $record->update([
                         'status' => 'returned',
                         'returned_at' => now(),
                         'return_condition' => $data['return_condition'],
-                        'officer_notes' => $data['officer_notes'] ?? null,
+                        'officer_notes' => $finalNotes,
+                        'officer_id' => auth()->id(),
                     ]);
 
                     $itemStatus = $data['return_condition'] === 'damaged' ? 'damaged' : 'available';
@@ -100,7 +119,7 @@ class ViewLoan extends ViewRecord
                     ]);
 
                     Notification::make()
-                        ->title('Pengembalian barang berhasil dicatat')
+                        ->title('Pengembalian barang berhasil dikonfirmasi dan diselesaikan')
                         ->success()
                         ->send();
                 }),
