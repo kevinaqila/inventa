@@ -15,6 +15,9 @@ class LoanSeeder extends Seeder
         $officer = User::where('email', 'admin@admin.com')->first();
         $officerId = $officer ? $officer->id : 1;
 
+        $student = User::where('email', 'mahasiswa@unesa.ac.id')->first();
+        $studentId = $student ? $student->id : null;
+
         Item::where('code', 'INV-PRJ-002')->update([
             'status' => 'maintenance',
             'condition' => 'lightly_damaged',
@@ -31,10 +34,11 @@ class LoanSeeder extends Seeder
 
         $loanActive = Loan::create([
             'loan_code' => 'LOAN-' . date('Ymd') . '-001',
-            'borrower_id_number' => '220101001',
-            'borrower_name' => 'Budi Santoso',
-            'study_program' => 'Sistem Informasi',
-            'phone_number' => '081234567801',
+            'user_id' => $studentId,
+            'borrower_id_number' => $student ? $student->nim : '23051214121',
+            'borrower_name' => $student ? $student->name : 'Farrel Kevin',
+            'study_program' => $student ? $student->study_program : 'S1 Sistem Informasi',
+            'phone_number' => $student ? $student->phone_number : '081234567890',
             'destination_building' => 'Gedung F',
             'destination_room' => 'Lab Komputer 1',
             'purpose' => 'Praktikum mata kuliah Pemrograman Web Terdistribusi.',

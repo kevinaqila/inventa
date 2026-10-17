@@ -18,6 +18,7 @@ class Loan extends Model
         'expected_return_at' => 'datetime',
         'approved_at' => 'datetime',
         'returned_at' => 'datetime',
+        'return_requested_at' => 'datetime',
     ];
 
     public function items(): BelongsToMany
@@ -37,7 +38,16 @@ class Loan extends Model
 
     public function isOverdue(): bool
     {
-        return $this->status === 'borrowed' && $this->expected_return_at && now()->isAfter($this->expected_return_at);
+        return in_array($this->status, ['borrowed', 'return_pending']) && $this->expected_return_at && now()->isAfter($this->expected_return_at);
+    }
+
+    public function getReturnPhotoUrlAttribute(): ?string
+    {
+        if (! $this->return_photo_path) {
+            return null;
+        }
+
+        return asset($this->return_photo_path);
     }
 
     public function getWhatsappUrlAttribute(): ?string

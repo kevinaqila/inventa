@@ -24,6 +24,18 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        User::firstOrCreate(
+            ['email' => 'mahasiswa@unesa.ac.id'],
+            [
+                'name' => 'Farrel Kevin',
+                'nim' => '23051214121',
+                'study_program' => 'S1 Sistem Informasi',
+                'phone_number' => '081234567890',
+                'password' => bcrypt('password'),
+                'role' => 'mahasiswa',
+            ]
+        );
+
         $this->call([
             ItemSeeder::class,
             LoanSeeder::class,

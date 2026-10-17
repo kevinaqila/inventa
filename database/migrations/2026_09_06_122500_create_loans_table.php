@@ -30,9 +30,11 @@ return new class extends Migration
             $table->dateTime('expected_return_at');
             $table->dateTime('approved_at')->nullable();
             $table->dateTime('returned_at')->nullable();
+            $table->dateTime('return_requested_at')->nullable();
 
-            $table->enum('status', ['pending', 'borrowed', 'returned', 'rejected', 'expired'])->default('pending');
+            $table->enum('status', ['pending', 'borrowed', 'return_pending', 'returned', 'rejected', 'expired'])->default('pending');
             $table->enum('return_condition', ['good', 'damaged'])->nullable();
+            $table->string('return_photo_path')->nullable();
             $table->text('officer_notes')->nullable();
 
             $table->foreignId('officer_id')->nullable()->constrained('users')->nullOnDelete();
