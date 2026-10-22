@@ -179,8 +179,17 @@ class PublicLoanController extends Controller
         ]);
 
         $file = $request->file('photo');
+
+        if (! @getimagesize($file->getRealPath())) {
+            return back()->withErrors(['photo' => 'File yang diunggah bukan berkas gambar valid.'])->withInput();
+        }
+
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+        $guessedExtension = strtolower($file->extension() ?? '');
+        $extension = in_array($guessedExtension, $allowedExtensions, true) ? $guessedExtension : 'jpg';
+
         $cleanCode = preg_replace('/[^A-Za-z0-9\-]/', '', $loan->loan_code);
-        $filename = 'return_' . strtolower($cleanCode) . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $filename = 'return_' . strtolower($cleanCode) . '_' . time() . '_' . Str::random(8) . '.' . $extension;
 
         $destinationPath = public_path('uploads/returns');
         if (! file_exists($destinationPath)) {
