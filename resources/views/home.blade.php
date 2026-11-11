@@ -24,6 +24,7 @@
                 Ajukan kebutuhan peralatan perkuliahan secara mandiri dan cepat. Cukup gunakan akun mahasiswa Anda, pilih barang, dan ambil di loket TU dengan menunjukkan KTM asli.
             </p>
 
+            @auth
             <div class="pt-2 flex flex-row items-center justify-center gap-2 sm:gap-3 max-w-lg mx-auto w-full">
                 <a href="{{ route('loans.create') }}" class="btn-primary flex-[1.4] md:flex-initial py-3 sm:py-3.5 px-4 sm:px-8 text-xs sm:text-sm font-bold shadow-md shadow-teal-700/10 transition active:scale-[0.98] text-center justify-center rounded-full">
                     <span>Isi Formulir Peminjaman</span>
@@ -32,6 +33,13 @@
                     <span>Cek Ketersediaan</span>
                 </a>
             </div>
+            @else
+            <div class="pt-2 flex flex-row items-center justify-center gap-2 sm:gap-3 max-w-lg mx-auto w-full">
+                <a href="#daftar-barang" class="py-3 px-6 text-xs sm:text-sm font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-full shadow-xs transition active:scale-[0.98] inline-flex items-center justify-center gap-1.5">
+                    <span>Cek Ketersediaan Barang</span>
+                </a>
+            </div>
+            @endauth
         </div>
     </div>
 
@@ -98,7 +106,7 @@
         </div>
 
         <div id="daftar-barang" class="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-xs flex flex-col justify-between space-y-3 scroll-mt-20 sm:scroll-mt-24">
-            <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <div class="flex items-center justify-between">
                 <h3 class="text-xs font-bold tracking-wider text-slate-400 uppercase">Barang Siap Dipinjam</h3>
                 <span class="text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200">
                     {{ $items->count() }} Tersedia

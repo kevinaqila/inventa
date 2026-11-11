@@ -80,7 +80,7 @@
     </style>
     @stack('styles')
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col justify-between antialiased pb-20 sm:pb-0">
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col justify-between antialiased {{ auth()->check() ? 'pb-20 sm:pb-0' : '' }}">
     @php
         $activeCount = auth()->check()
             ? \App\Models\Loan::where('user_id', auth()->id())
@@ -96,6 +96,7 @@
                 <img src="/images/inventa-text.svg" alt="INVENTA" class="h-4 sm:h-5 w-auto">
             </a>
 
+            @auth
             <nav class="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
                 <a href="{{ route('home') }}" class="px-3.5 py-2 rounded-xl text-xs font-bold transition {{ request()->routeIs('home') ? 'bg-teal-50 text-teal-700 border border-teal-200' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' }}">
                     Beranda
@@ -114,6 +115,7 @@
                     @endif
                 </a>
             </nav>
+            @endauth
 
             <div class="flex items-center gap-2 sm:gap-3">
 
@@ -211,6 +213,7 @@
         </div>
     </footer>
 
+    @auth
     <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-2 flex items-center justify-around shadow-lg">
         <a href="{{ route('home') }}" class="flex flex-col items-center gap-1 text-[11px] font-bold py-1 px-3 rounded-xl transition {{ request()->routeIs('home') ? 'text-teal-700' : 'text-slate-500 hover:text-slate-800' }}">
             <svg class="w-5 h-5 {{ request()->routeIs('home') ? 'text-teal-600' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -238,6 +241,7 @@
             @endif
         </a>
     </nav>
+    @endauth
 
     @auth
         <div id="profile-modal-backdrop" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
